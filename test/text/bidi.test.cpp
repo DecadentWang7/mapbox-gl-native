@@ -19,6 +19,9 @@ using namespace mbgl;
  To closely inspect the inputs and outputs, use a binary/hex editor.
 */
 
+// Qt build without ICU has a stub BiDi implementation that just returns the inputs
+#ifndef WITH_QT_I18N
+
 TEST(BiDi, ArabicShaping) {
     EXPECT_EQ(applyArabicShaping(u"اليَمَن‎‎"), u"ﺍﻟﻴﹷﻤﹷﻦ‎‎");
 }
@@ -87,3 +90,5 @@ TEST(BiDi, WithLineBreaks) {
 
      EXPECT_EQ(bidi.processStyledText(input, { 5, 18, 30 }), expected);
  }
+
+#endif // WITH_QT_I18N
