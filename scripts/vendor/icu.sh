@@ -49,6 +49,12 @@ for FILE in "${ALL[@]}"; do
     sed 's/^#include \"\(unicode\/[^\"]\{1,\}\)\"/#include <\1>/' "common/$FILE" > "$DIR/$FILE"
 done
 
+# Apply patch from https://github.com/LibreOffice/core/blob/master/external/icu/icu4c-ubsan.patch.1
+# Shifting signed int to a number greater than can be represented is undefined behavior
+sed -i.bak 's/((index)|((int32_t)(level)<<31))/((index)|((uint32_t)(level)<<31))/' "src/ubidiimp.h"
+sed -i.bak 's/((x)|=((int32_t)(level)<<31)/((x)|=((uint32_t)(level)<<31)/' "src/ubidiimp.h"
+rm -rf src/ubidiimp.h.bak
+
 rm -rf common
 
 file_list include src -name "*.h" -o -name "*.cpp"
