@@ -56,9 +56,11 @@ final class NativeMapView {
   private final MapRenderer mapRenderer;
 
   // Used to validate if methods are called from the correct thread
+  @NonNull
   private final Thread thread;
 
   // Used for callbacks
+  @Nullable
   private ViewCallback viewCallback;
 
   // Device density
@@ -84,8 +86,8 @@ final class NativeMapView {
   // Constructors
   //
 
-  public NativeMapView(final Context context, final boolean crossSourceCollisions, final ViewCallback viewCallback,
-                       final MapRenderer mapRenderer) {
+  public NativeMapView(@NonNull final Context context, final boolean crossSourceCollisions,
+                       final ViewCallback viewCallback, final MapRenderer mapRenderer) {
     this(context, context.getResources().getDisplayMetrics().density, crossSourceCollisions, viewCallback, mapRenderer);
   }
 
@@ -237,14 +239,14 @@ final class NativeMapView {
     nativeMoveBy(dx / pixelRatio, dy / pixelRatio, duration);
   }
 
-  public void setLatLng(LatLng latLng) {
+  public void setLatLng(@NonNull LatLng latLng) {
     if (checkState("setLatLng")) {
       return;
     }
     setLatLng(latLng, 0);
   }
 
-  public void setLatLng(LatLng latLng, long duration) {
+  public void setLatLng(@NonNull LatLng latLng, long duration) {
     if (checkState("setLatLng")) {
       return;
     }
@@ -310,7 +312,7 @@ final class NativeMapView {
     nativeSetPitch(pitch, duration);
   }
 
-  public void setZoom(double zoom, PointF focalPoint, long duration) {
+  public void setZoom(double zoom, @NonNull PointF focalPoint, long duration) {
     if (checkState("setZoom")) {
       return;
     }
@@ -435,7 +437,8 @@ final class NativeMapView {
     return nativeAddMarkers(markers)[0];
   }
 
-  public long[] addMarkers(List<Marker> markers) {
+  @NonNull
+  public long[] addMarkers(@NonNull List<Marker> markers) {
     if (checkState("addMarkers")) {
       return new long[] {};
     }
@@ -450,7 +453,8 @@ final class NativeMapView {
     return nativeAddPolylines(polylines)[0];
   }
 
-  public long[] addPolylines(List<Polyline> polylines) {
+  @NonNull
+  public long[] addPolylines(@NonNull List<Polyline> polylines) {
     if (checkState("addPolylines")) {
       return new long[] {};
     }
@@ -465,14 +469,15 @@ final class NativeMapView {
     return nativeAddPolygons(polygons)[0];
   }
 
-  public long[] addPolygons(List<Polygon> polygons) {
+  @NonNull
+  public long[] addPolygons(@NonNull List<Polygon> polygons) {
     if (checkState("addPolygons")) {
       return new long[] {};
     }
     return nativeAddPolygons(polygons.toArray(new Polygon[polygons.size()]));
   }
 
-  public void updateMarker(Marker marker) {
+  public void updateMarker(@NonNull Marker marker) {
     if (checkState("updateMarker")) {
       return;
     }
@@ -481,14 +486,14 @@ final class NativeMapView {
     nativeUpdateMarker(marker.getId(), position.getLatitude(), position.getLongitude(), icon.getId());
   }
 
-  public void updatePolygon(Polygon polygon) {
+  public void updatePolygon(@NonNull Polygon polygon) {
     if (checkState("updatePolygon")) {
       return;
     }
     nativeUpdatePolygon(polygon.getId(), polygon);
   }
 
-  public void updatePolyline(Polyline polyline) {
+  public void updatePolyline(@NonNull Polyline polyline) {
     if (checkState("updatePolyline")) {
       return;
     }
@@ -510,6 +515,7 @@ final class NativeMapView {
     nativeRemoveAnnotations(ids);
   }
 
+  @NonNull
   public long[] queryPointAnnotations(RectF rect) {
     if (checkState("queryPointAnnotations")) {
       return new long[] {};
@@ -517,6 +523,7 @@ final class NativeMapView {
     return nativeQueryPointAnnotations(rect);
   }
 
+  @NonNull
   public long[] queryShapeAnnotations(RectF rectF) {
     if (checkState("queryShapeAnnotations")) {
       return new long[] {};
@@ -594,14 +601,14 @@ final class NativeMapView {
     return nativeGetMetersPerPixelAtLatitude(lat, getZoom()) / pixelRatio;
   }
 
-  public ProjectedMeters projectedMetersForLatLng(LatLng latLng) {
+  public ProjectedMeters projectedMetersForLatLng(@NonNull LatLng latLng) {
     if (checkState("projectedMetersForLatLng")) {
       return null;
     }
     return nativeProjectedMetersForLatLng(latLng.getLatitude(), latLng.getLongitude());
   }
 
-  public LatLng latLngForProjectedMeters(ProjectedMeters projectedMeters) {
+  public LatLng latLngForProjectedMeters(@NonNull ProjectedMeters projectedMeters) {
     if (checkState("latLngForProjectedMeters")) {
       return new LatLng();
     }
@@ -609,7 +616,8 @@ final class NativeMapView {
       projectedMeters.getEasting()).wrap();
   }
 
-  public PointF pixelForLatLng(LatLng latLng) {
+  @NonNull
+  public PointF pixelForLatLng(@NonNull LatLng latLng) {
     if (checkState("pixelForLatLng")) {
       return new PointF();
     }
@@ -618,7 +626,7 @@ final class NativeMapView {
     return pointF;
   }
 
-  public LatLng latLngForPixel(PointF pixel) {
+  public LatLng latLngForPixel(@NonNull PointF pixel) {
     if (checkState("latLngForPixel")) {
       return new LatLng();
     }
@@ -632,14 +640,14 @@ final class NativeMapView {
     return nativeGetTopOffsetPixelsForAnnotationSymbol(symbolName);
   }
 
-  public void jumpTo(double angle, LatLng center, double pitch, double zoom) {
+  public void jumpTo(double angle, @NonNull LatLng center, double pitch, double zoom) {
     if (checkState("jumpTo")) {
       return;
     }
     nativeJumpTo(angle, center.getLatitude(), center.getLongitude(), pitch, zoom);
   }
 
-  public void easeTo(double angle, LatLng center, long duration, double pitch, double zoom,
+  public void easeTo(double angle, @NonNull LatLng center, long duration, double pitch, double zoom,
                      boolean easingInterpolator) {
     if (checkState("easeTo")) {
       return;
@@ -648,13 +656,14 @@ final class NativeMapView {
       easingInterpolator);
   }
 
-  public void flyTo(double angle, LatLng center, long duration, double pitch, double zoom) {
+  public void flyTo(double angle, @NonNull LatLng center, long duration, double pitch, double zoom) {
     if (checkState("flyTo")) {
       return;
     }
     nativeFlyTo(angle, center.getLatitude(), center.getLongitude(), duration, pitch, zoom);
   }
 
+  @NonNull
   public CameraPosition getCameraPosition() {
     if (checkState("getCameraValues")) {
       return new CameraPosition.Builder().build();
@@ -917,7 +926,7 @@ final class NativeMapView {
   }
 
   @Keep
-  protected void onSnapshotReady(Bitmap mapContent) {
+  protected void onSnapshotReady(@Nullable Bitmap mapContent) {
     if (checkState("OnSnapshotReady")) {
       return;
     }
@@ -948,12 +957,14 @@ final class NativeMapView {
   @Keep
   private native void nativeSetStyleUrl(String url);
 
+  @NonNull
   @Keep
   private native String nativeGetStyleUrl();
 
   @Keep
   private native void nativeSetStyleJson(String newStyleJson);
 
+  @NonNull
   @Keep
   private native String nativeGetStyleJson();
 
@@ -972,13 +983,16 @@ final class NativeMapView {
   @Keep
   private native void nativeSetLatLng(double latitude, double longitude, long duration);
 
+  @NonNull
   @Keep
   private native LatLng nativeGetLatLng();
 
+  @NonNull
   @Keep
   private native CameraPosition nativeGetCameraForLatLngBounds(
     LatLngBounds latLngBounds, double top, double left, double bottom, double right, double bearing, double tilt);
 
+  @NonNull
   @Keep
   private native CameraPosition nativeGetCameraForGeometry(
     Geometry geometry, double top, double left, double bottom, double right, double bearing, double tilt);
@@ -1034,21 +1048,26 @@ final class NativeMapView {
   @Keep
   private native void nativeUpdateMarker(long markerId, double lat, double lon, String iconId);
 
+  @NonNull
   @Keep
   private native long[] nativeAddMarkers(Marker[] markers);
 
+  @NonNull
   @Keep
   private native long[] nativeAddPolylines(Polyline[] polylines);
 
+  @NonNull
   @Keep
   private native long[] nativeAddPolygons(Polygon[] polygons);
 
   @Keep
   private native void nativeRemoveAnnotations(long[] id);
 
+  @NonNull
   @Keep
   private native long[] nativeQueryPointAnnotations(RectF rect);
 
+  @NonNull
   @Keep
   private native long[] nativeQueryShapeAnnotations(RectF rect);
 
@@ -1083,15 +1102,19 @@ final class NativeMapView {
   @Keep
   private native double nativeGetMetersPerPixelAtLatitude(double lat, double zoom);
 
+  @NonNull
   @Keep
   private native ProjectedMeters nativeProjectedMetersForLatLng(double latitude, double longitude);
 
+  @NonNull
   @Keep
   private native LatLng nativeLatLngForProjectedMeters(double northing, double easting);
 
+  @NonNull
   @Keep
   private native PointF nativePixelForLatLng(double lat, double lon);
 
+  @NonNull
   @Keep
   private native LatLng nativeLatLngForPixel(float x, float y);
 
@@ -1110,6 +1133,7 @@ final class NativeMapView {
   private native void nativeFlyTo(double angle, double latitude, double longitude,
                                   long duration, double pitch, double zoom);
 
+  @NonNull
   @Keep
   private native CameraPosition nativeGetCameraPosition();
 
@@ -1125,9 +1149,11 @@ final class NativeMapView {
   @Keep
   private native void nativeSetTransitionDelay(long delay);
 
+  @NonNull
   @Keep
   private native Layer[] nativeGetLayers();
 
+  @NonNull
   @Keep
   private native Layer nativeGetLayer(String layerId);
 
@@ -1140,18 +1166,22 @@ final class NativeMapView {
   @Keep
   private native void nativeAddLayerAt(long layerPtr, int index) throws CannotAddLayerException;
 
+  @NonNull
   @Keep
   private native Layer nativeRemoveLayerById(String layerId);
 
   @Keep
   private native void nativeRemoveLayer(long layerId);
 
+  @NonNull
   @Keep
   private native Layer nativeRemoveLayerAt(int index);
 
+  @NonNull
   @Keep
   private native Source[] nativeGetSources();
 
+  @NonNull
   @Keep
   private native Source nativeGetSource(String sourceId);
 
@@ -1170,6 +1200,7 @@ final class NativeMapView {
   @Keep
   private native void nativeRemoveImage(String name);
 
+  @NonNull
   @Keep
   private native Bitmap nativeGetImage(String name);
 
@@ -1182,17 +1213,20 @@ final class NativeMapView {
   @Keep
   private native void nativeTakeSnapshot();
 
+  @NonNull
   @Keep
   private native Feature[] nativeQueryRenderedFeaturesForPoint(float x, float y,
                                                                String[] layerIds,
                                                                Object[] filter);
 
+  @NonNull
   @Keep
   private native Feature[] nativeQueryRenderedFeaturesForBox(float left, float top,
                                                              float right, float bottom,
                                                              String[] layerIds,
                                                              Object[] filter);
 
+  @NonNull
   @Keep
   private native Light nativeGetLight();
 
@@ -1242,7 +1276,7 @@ final class NativeMapView {
     nativeTakeSnapshot();
   }
 
-  public void setOnFpsChangedListener(final MapboxMap.OnFpsChangedListener listener) {
+  public void setOnFpsChangedListener(@NonNull final MapboxMap.OnFpsChangedListener listener) {
     final Handler handler = new Handler();
     mapRenderer.queueEvent(new Runnable() {
 
@@ -1280,6 +1314,7 @@ final class NativeMapView {
       this.sdf = sdf;
     }
 
+    @NonNull
     @Override
     protected List<Image> doInBackground(HashMap<String, Bitmap>... params) {
       HashMap<String, Bitmap> bitmapHashMap = params[0];
@@ -1309,7 +1344,7 @@ final class NativeMapView {
     }
 
     @Override
-    protected void onPostExecute(List<Image> images) {
+    protected void onPostExecute(@NonNull List<Image> images) {
       super.onPostExecute(images);
       if (nativeMapView != null && !nativeMapView.checkState("nativeAddImages")) {
         nativeMapView.nativeAddImages(images.toArray(new Image[images.size()]));
@@ -1322,6 +1357,7 @@ final class NativeMapView {
 
     int getHeight();
 
+    @Nullable
     Bitmap getViewContent();
   }
 }
